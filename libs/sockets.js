@@ -14,7 +14,8 @@ module.exports.init = function(socket) {
     client.on("send", function(msg) {
       socket.sockets.emit("chat", people[client.id], msg);
       socket.sockets.emit("update", people[client.id] + " sent: " + JSON.stringify(msg));
-      console.log(people[client.id] + " sent: " + JSON.stringify(msg));
+      socket.sockets.emit("receive", msg);
+      console.log(msg);
     });
 
     client.on("disconnect", function() {

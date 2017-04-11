@@ -1,9 +1,16 @@
 app.controller('ChatController', ['$scope', '$location', '$routeParams', function($scope, $location, $routeParams) {
 
+  var cedric_pp = "https://scontent-mxp1-1.xx.fbcdn.net/v/t1.0-9/10981992_854381584636591_4594131235025284689_n.jpg?oh=0177b6d4c5e300a93cfa20de639bd235&oe=592BF9D9";
+  var serge_pp = "http://files.sergeharb.com/img/Me.jpg";
+
   $scope.user = {
-    "name": "Serge Harb",
+    "name": $routeParams.username,
     "username": $routeParams.username,
-    "profilePicture": "http://files.sergeharb.com/img/Me.jpg"
+    "profilePicture": serge_pp
+  }
+
+  if ($scope.user.username == 'cedric') {
+    $scope.user.profilePicture = cedric_pp;
   }
 
   var socket = io();
@@ -12,25 +19,55 @@ app.controller('ChatController', ['$scope', '$location', '$routeParams', functio
     console.log(msg);
   });
 
-  $scope.chatConversations = [{
-    "_id": "123456789abc",
-    "name": "Cedric Harb",
-    "username": "cedric",
-    "profilePicture": "https://scontent-mxp1-1.xx.fbcdn.net/v/t1.0-9/10981992_854381584636591_4594131235025284689_n.jpg?oh=0177b6d4c5e300a93cfa20de639bd235&oe=592BF9D9",
-    "lastmessage": {
-      "content": "Hello Man",
-      "status": "none",
-      "date": "22/02/2012 11:12:11"
+  socket.on("receive", function(data) {
+    if (data.sender == $scope.user.username) {
+      $scope.conversations[data.receiver].push(data);
+      $scope.$apply();
+    } else {
+      if (data.receiver != $scope.user.username) return false;
+      $scope.conversations[data.sender].push(data);
+      $scope.$apply();
     }
-  }]
+  })
 
   $scope.conversations = {};
-  $scope.conversations["cedric"] = [{
-    "date": "22/02/2012 11:12:11",
-    "content": "Hello Man",
-    "sender": "cedric",
-    "receiver": "surgeharb"
-  }]
+  if ($scope.user.username == 'cedric') {
+    $scope.chatConversations = [{
+      "_id": "123456789abd",
+      "name": "Serge Harb",
+      "username": "serge",
+      "profilePicture": serge_pp,
+      "lastmessage": {
+        "content": "Hello Man",
+        "status": "none",
+        "date": "22/02/2012 11:12:11"
+      }
+    }]
+    $scope.conversations["serge"] = [{
+      "date": "22/02/2012 11:12:11",
+      "content": "Hello Man",
+      "sender": "cedric",
+      "receiver": "serge"
+    }]
+  } else {
+    $scope.chatConversations = [{
+      "_id": "123456789abc",
+      "name": "Cedric Harb",
+      "username": "cedric",
+      "profilePicture": cedric_pp,
+      "lastmessage": {
+        "content": "Hello Man",
+        "status": "none",
+        "date": "22/02/2012 11:12:11"
+      }
+    }]
+    $scope.conversations["cedric"] = [{
+      "date": "22/02/2012 11:12:11",
+      "content": "Hello Man",
+      "sender": "cedric",
+      "receiver": "serge"
+    }]
+  }
 
   $scope.conv = {};
   $scope.conv.user = {};
@@ -45,7 +82,6 @@ app.controller('ChatController', ['$scope', '$location', '$routeParams', functio
         "sender": $scope.user.username,
         "receiver": $scope.conv.user.username
       }
-      $scope.conversations[$scope.conv.user.username].push(message);
       socket.emit("send", message);
       $scope.message = '', message = {};
       scrollBottom();
