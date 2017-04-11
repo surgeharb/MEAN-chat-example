@@ -1,0 +1,184 @@
+$grey: #a09c9e;
+$light-grey: #dadada;
+$dark-grey: #8a8a8a;
+$white: #fff;
+$border-radius: 5px;
+$v-small: .66rem;
+$small: .75rem;
+$normal: .88rem;
+
+/* GENERAL
+/**********/
+
+* {
+    outline: 0;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+body {
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+}
+
+.full.row {
+    max-width: 100%;
+}
+
+.small {
+    font-size: $small;
+}
+
+.normal {
+    font-size: $normal;
+}
+
+.bold {
+    font-weight: 500;
+}
+
+#main {
+    padding: 20px 0;
+    height: 100vh;
+    .row {
+        height: 100%;
+        &>div {
+            height: 100%;
+            .row {
+                margin: 0;
+            }
+        }
+    }
+}
+
+#conversations {
+    border-bottom-left-radius: $border-radius;
+    border-top-left-radius: $border-radius;
+    background-color: $grey;
+    padding: 0;
+    .head {
+        height: 70px;
+        background: $white;
+        border-top-left-radius: $border-radius;
+        position: relative;
+        z-index: 2;
+        img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 10px 15px;
+        }
+    }
+    .body {
+        height: calc(100% - 70px);
+        overflow: auto;
+        border-bottom-left-radius: $border-radius;
+        .chat-conv {
+            height: 75px;
+            border-bottom: 1px solid $dark-grey;
+            transition: background .25s ease;
+            cursor: pointer;
+            &:hover {
+                background: rgba(255, 255, 255, .2);
+            }
+            &.active {
+                background: rgba(255, 255, 255, .25);
+                &:hover {
+                    background: rgba(255, 255, 255, .25);
+                }
+            }
+        }
+        img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 10px 15px;
+        }
+    }
+    .col {
+        padding: 0;
+        &:nth-child(2) {
+            display: table;
+            .name,
+            .info {
+                display: table-cell;
+                vertical-align: middle;
+                padding-left: 10px;
+            }
+        }
+    }
+}
+
+#conversation {
+    border-bottom-right-radius: $border-radius;
+    border-top-right-radius: $border-radius;
+    background-color: $light-grey;
+    padding: 0;
+    .head {
+        height: 70px;
+        background: $white;
+        position: relative;
+        z-index: 2;
+        border-top-right-radius: $border-radius;
+        .col {
+            padding: 0;
+            &:nth-child(2) {
+                display: table;
+                .name {
+                    display: table-cell;
+                    vertical-align: middle;
+                }
+            }
+        }
+        img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 10px 15px;
+        }
+    }
+    .body {
+        padding-top: 20px;
+        padding-bottom: 10px;
+        height: calc(100% - 140px);
+        overflow: auto;
+        position: relative;
+        z-index: 1;
+        .message {
+            padding: 5px 25px;
+            min-height: 20px;
+            height: auto;
+            .content {
+                white-space: pre-wrap;
+                word-break: break-word;
+                background: $white;
+                padding: 5px 15px;
+                border-radius: 10px;
+                .time {
+                    font-size: $v-small;
+                    padding-left: 15px;
+                    position: relative;
+                    top: 2px;
+                }
+            }
+        }
+    }
+    .foot {
+        height: 70px;
+        background: $white;
+        border-bottom-right-radius: $border-radius;
+        position: relative;
+        z-index: 1;
+        input {
+            width: 75%;
+            display: inline-block;
+            padding-top: 5px;
+            margin-left: 3.25%;
+            margin-right: 2.5%;
+        }
+        button {
+            display: inline-block;
+            margin-top: 10px;
+        }
+    }
+}

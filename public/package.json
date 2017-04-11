@@ -1,0 +1,31 @@
+{
+  "name": "surge",
+  "version": "1.0.0",
+  "description": "Serge's Portfolio packages",
+  "main": "gulpfile.js",
+  "scripts": {
+    "gulp": "gulp",
+    "start": " \"npm run gulp\" "
+  },
+  "author": "Serge Harb",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.18.5",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-cache": "^0.4.5",
+    "gulp-clean-css": "^3.0.3",
+    "gulp-concat": "^2.6.1",
+    "gulp-imagemin": "^3.1.1",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.0.0",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7"
+  },
+  "dependencies": {
+    "socket.io-client": "^1.7.3"
+  }
+}

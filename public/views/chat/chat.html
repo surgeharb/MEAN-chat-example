@@ -1,0 +1,48 @@
+<div id="main" class="container">
+    <div class="row z-depth-1">
+        <div id="conversations" class="col s8">
+            <div class="row head z-depth-1">
+                <div class="col s5">
+                    <img ng-src="{{user.profilePicture}}" />
+                </div>
+                <div class="col s19">
+                    <span class="name" ng-bind="user.name"></span>
+                </div>
+            </div>
+            <div class="body row">
+                <div class="row chat-conv" ng-repeat="chat in chatConversations" ng-click="fetchConversation(chat)" ng-class="{ 'active': (chat._id === conv.user._id) }">
+                    <div class="col s5">
+                        <img ng-src="{{chat.profilePicture}}" />
+                    </div>
+                    <div class="col s19">
+                        <span class="info">
+                            <span ng-bind="chat.name" class="bold"></span>
+                            <br />
+                            <span ng-bind="chat.lastmessage.content" class="normal"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="conversation" class="col s16">
+            <div class="row head z-depth-1">
+                <div class="col s3">
+                    <img ng-src="{{conv.user.profilePicture}}" />
+                </div>
+                <div class="col s21">
+                    <span class="name" ng-bind="conv.user.name"></span>
+                </div>
+            </div>
+            <div class="row body z-depth-1">
+                <div ng-repeat="msg in conversations[conv.user.username]" class="message" ng-class="{ 'right-align': (msg.sender === user.username) }">
+                    <span class="content z-depth-1"><span ng-bind="msg.content"></span><span ng-bind="getTime(msg.date)"
+                        class="time"></span></span>
+                </div>
+            </div>
+            <div class="row foot z-depth-1">
+                <input type="text" name="message" ng-model="message" placeholder="Type a message" ng-keypress="checkEnter($event)">
+                <button class="waves-effect waves-light btn" type="button" ng-click="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
