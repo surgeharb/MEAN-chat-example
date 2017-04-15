@@ -8,7 +8,7 @@ module.exports = function(router, config) {
 
     if (_.contains(config.get("allowedRoutes"), req.method + " " + req.url)) { //routes that do not need any authorization
       next();
-    } else { //routes related to the callServer only
+    } else {
       if (typeof(req.headers.authorization) == "undefined") {
         return res.status(401).json({ message: 'missing authorization header' });
       } else { //other api routes that needs JWT authorization

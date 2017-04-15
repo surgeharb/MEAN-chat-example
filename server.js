@@ -23,9 +23,11 @@ const bodyParser = require('body-parser');
  */
 require('./libs/dbconnection')(mongoose).then(function(log) {
   console.log(log);
+
   //populate status collections
   //require('./libs/status')(config.get('statuses'));
-}, function(log) {
+
+}, function(log) { //on error
   console.log(log);
 });
 
