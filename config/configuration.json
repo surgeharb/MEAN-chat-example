@@ -15,5 +15,17 @@
       "id": 2,
       "name_en": "away"
     }
-  ]
+  ],
+  "users": {
+    "fields": [
+      "name",
+      "imgURL",
+      "username",
+      "status",
+      "lastSeen",
+      "contacts",
+      "conversations",
+      "createdAt"
+    ]
+  }
 }
