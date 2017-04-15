@@ -1,0 +1,19 @@
+{
+  "allowedRoutes": [
+    "POST /login",
+    "POST /users"
+  ],
+  "statuses": [{
+      "id": 0,
+      "name_en": "offline"
+    },
+    {
+      "id": 1,
+      "name_en": "online"
+    },
+    {
+      "id": 2,
+      "name_en": "away"
+    }
+  ]
+}
