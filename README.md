@@ -1,1 +1,1 @@
-# Serge Harb's Chat System
+# Realtime Chat System using the MEAN stack
