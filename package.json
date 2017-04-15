@@ -4,12 +4,21 @@
   "description": "chat",
   "main": "server.js",
   "dependencies": {
+    "auth-header": "^0.3.1",
+    "body-parser": "^1.17.1",
+    "dotenv": "^4.0.0",
     "express": "^4.15.2",
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^7.3.0",
+    "moment-timezone": "^0.5.13",
+    "mongoose": "^4.9.4",
+    "morgan": "^1.8.1",
+    "nconf": "^0.8.4",
+    "path": "^0.12.7",
+    "q": "^1.5.0",
     "socket.io": "^1.7.3"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "author": "Serge Harb",
