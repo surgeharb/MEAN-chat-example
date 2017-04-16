@@ -1,17 +1,10 @@
-app.controller('ChatController', ['$scope', '$location', '$routeParams', function($scope, $location, $routeParams) {
+app.controller('ChatController', ['$scope', '$location', 'apiService', 'userService', function($scope, $location, apiService, userService) {
+
+  $scope.user = userService.getUser();
+  $scope.token = userService.getToken();
 
   var cedric_pp = "https://scontent-mxp1-1.xx.fbcdn.net/v/t1.0-9/10981992_854381584636591_4594131235025284689_n.jpg?oh=0177b6d4c5e300a93cfa20de639bd235&oe=592BF9D9";
   var serge_pp = "http://files.sergeharb.com/img/Me.jpg";
-
-  $scope.user = {
-    "name": $routeParams.username,
-    "username": $routeParams.username,
-    "profilePicture": serge_pp
-  }
-
-  if ($scope.user.username == 'cedric') {
-    $scope.user.profilePicture = cedric_pp;
-  }
 
   var socket = io();
   socket.emit("join", $scope.user.username);
@@ -35,7 +28,7 @@ app.controller('ChatController', ['$scope', '$location', '$routeParams', functio
     $scope.chatConversations = [{
       "_id": "123456789abd",
       "name": "Serge Harb",
-      "username": "serge",
+      "username": "surgeharb",
       "profilePicture": serge_pp,
       "lastmessage": {
         "content": "Hello Man",
@@ -43,11 +36,11 @@ app.controller('ChatController', ['$scope', '$location', '$routeParams', functio
         "date": "22/02/2012 11:12:11"
       }
     }]
-    $scope.conversations["serge"] = [{
+    $scope.conversations["surgeharb"] = [{
       "date": "22/02/2012 11:12:11",
       "content": "Hello Man",
       "sender": "cedric",
-      "receiver": "serge"
+      "receiver": "surgeharb"
     }]
   } else {
     $scope.chatConversations = [{
@@ -65,7 +58,7 @@ app.controller('ChatController', ['$scope', '$location', '$routeParams', functio
       "date": "22/02/2012 11:12:11",
       "content": "Hello Man",
       "sender": "cedric",
-      "receiver": "serge"
+      "receiver": "surgeharb"
     }]
   }
 
