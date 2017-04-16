@@ -6,21 +6,27 @@ app.controller('ChatController', ['$scope', '$location', 'apiService', 'userServ
   var cedric_pp = "https://scontent-mxp1-1.xx.fbcdn.net/v/t1.0-9/10981992_854381584636591_4594131235025284689_n.jpg?oh=0177b6d4c5e300a93cfa20de639bd235&oe=592BF9D9";
   var serge_pp = "http://files.sergeharb.com/img/Me.jpg";
 
-  var socket = io();
-  socket.emit("join", $scope.user.username);
-  socket.on("update", function(msg) {
-    console.log(msg);
-  });
+  var socket = io.connect('http://localhost:9000');
+  socket.on("connect", function() {
+    socket.emit("authenticate", { token: myAuthToken });
+  })
 
-  socket.on("receive", function(data) {
-    if (data.sender == $scope.user.username) {
-      $scope.conversations[data.receiver].push(data);
-      $scope.$apply();
-    } else {
-      if (data.receiver != $scope.user.username) return false;
-      $scope.conversations[data.sender].push(data);
-      $scope.$apply();
-    }
+  socket.on("auth", function() {
+    socket.emit("join", $scope.user.username);
+    socket.on("update", function(msg) {
+      console.log(msg);
+    });
+
+    socket.on("receive", function(data) {
+      if (data.sender == $scope.user.username) {
+        $scope.conversations[data.receiver].push(data);
+        $scope.$apply();
+      } else {
+        if (data.receiver != $scope.user.username) return false;
+        $scope.conversations[data.sender].push(data);
+        $scope.$apply();
+      }
+    })
   })
 
   $scope.conversations = {};

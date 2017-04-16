@@ -1,18 +1,13 @@
-app.controller('LoginController', ['$scope', '$location', 'apiService', 'userService', function($scope, $location, apiService, userService) {
+app.controller('LoginController', ['$scope', '$location', 'authService', function($scope, $location, authService) {
 
   $scope.login = function() {
-    var params = {
-      type: 'api/login',
-      requestType: 'POST',
-      data: {
-        "username": $scope.username,
-        "password": $scope.password
+    authService.Login($scope.username, $scope.password, function(result) {
+      if (result) {
+        $location.path('/');
+      } else {
+        $scope.error = 'Your username or password is incorrect';
+        $scope.loading = false;
       }
-    }
-    apiService.gatewayCall(params).then(function(response) {
-      $scope.token = userService.setToken(response.data.token);
-      $scope.user = userService.updateUser(response.data.user);
-      $location.path('/');
     });
   }
 
