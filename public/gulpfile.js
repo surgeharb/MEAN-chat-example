@@ -46,7 +46,8 @@ gulp.task('vendor-scripts', function() {
       'dev/scripts/main/materialize.js',
       'dev/scripts/main/angular.js',
       'dev/scripts/main/angular-route.js',
-      'dev/scripts/main/angular-sanitize.js'
+      'dev/scripts/main/angular-sanitize.js',
+      'dev/scripts/main/ngStorage.js'
     ])
     .pipe(concat({ path: 'vendor.js' }))
     .pipe(gulp.dest('dist/scripts'))
