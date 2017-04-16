@@ -1,5 +1,7 @@
 var people = {};
 
+const users = require('../models/users');
+
 module.exports.init = function(socket) {
 
   socket.on('connection', function(client) {

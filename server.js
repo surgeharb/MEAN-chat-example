@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
  * Bind middlewares
  */
 const middleware = require('./middleware')(router, config);
-app.use('/v1', router);
+app.use('/api', router);
 
 /**
  * Get app API routes
