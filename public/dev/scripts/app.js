@@ -19,11 +19,11 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider', function ($r
 
 }])
 
-app.run(['$location', '$rootScope', '$http', '$localStorage', function ($location, $rootScope, $http, $localStorage) {
-  // keep user logged in after page refresh
+app.run(['$location', '$rootScope', '$http', '$localStorage', 'userService', 'authService', function ($location, $rootScope, $http, $localStorage, userService, authService) {
+  //keep user logged in after page refresh
   if ($localStorage.User) {
     $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.User.token;
-    $rootScope.authToken = $localStorage.User.token;
+    userService.setToken($localStorage.User.token);
   }
 
   $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
@@ -40,9 +40,5 @@ app.run(['$location', '$rootScope', '$http', '$localStorage', function ($locatio
       $location.path('/login');
     }
   });
-
-}]);
-
-app.controller('MainCtrl', ['$scope', function ($scope) {
 
 }]);
