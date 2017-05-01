@@ -1,4 +1,4 @@
-app.controller('ChatController', ['$scope', '$location', 'apiService', 'userService', function($scope, $location, apiService, userService) {
+app.controller('ChatController', ['$scope', '$location', 'apiService', 'userService', function ($scope, $location, apiService, userService) {
 
   $scope.user = userService.getUser();
   $scope.token = userService.getToken();
@@ -6,18 +6,18 @@ app.controller('ChatController', ['$scope', '$location', 'apiService', 'userServ
   var cedric_pp = "https://scontent-mxp1-1.xx.fbcdn.net/v/t1.0-9/10981992_854381584636591_4594131235025284689_n.jpg?oh=0177b6d4c5e300a93cfa20de639bd235&oe=592BF9D9";
   var serge_pp = "http://files.sergeharb.com/img/Me.jpg";
 
-  var socket = io.connect('http://localhost:9000');
-  socket.on("connect", function() {
-    socket.emit("authenticate", { token: myAuthToken });
+  var socket = io.connect('http://localhost:12345');
+  socket.on("connect", function () {
+    socket.emit("authenticate", { "token": $rootScope.authToken });
   })
 
-  socket.on("auth", function() {
+  socket.on("auth", function () {
     socket.emit("join", $scope.user.username);
-    socket.on("update", function(msg) {
+    socket.on("update", function (msg) {
       console.log(msg);
     });
 
-    socket.on("receive", function(data) {
+    socket.on("receive", function (data) {
       if (data.sender == $scope.user.username) {
         $scope.conversations[data.receiver].push(data);
         $scope.$apply();
@@ -71,7 +71,7 @@ app.controller('ChatController', ['$scope', '$location', 'apiService', 'userServ
   $scope.conv = {};
   $scope.conv.user = {};
 
-  $scope.sendMessage = function() {
+  $scope.sendMessage = function () {
 
     if ($scope.message) {
       var date = new Date();
@@ -88,13 +88,13 @@ app.controller('ChatController', ['$scope', '$location', 'apiService', 'userServ
 
   }
 
-  $scope.checkEnter = function(event) {
+  $scope.checkEnter = function (event) {
     if (event.keyCode === 13) {
       $scope.sendMessage();
     }
   }
 
-  $scope.getTime = function(date) {
+  $scope.getTime = function (date) {
     var time = date.split(" ")[1];
     var splitted = time.split(":");
     var hh = format(parseInt(splitted[0]));
@@ -114,7 +114,7 @@ app.controller('ChatController', ['$scope', '$location', 'apiService', 'userServ
     $('#conversation .body').stop().animate({ scrollTop: $('#conversation .body').prop("scrollHeight") }, 500);
   }
 
-  $scope.fetchConversation = function(chat) {
+  $scope.fetchConversation = function (chat) {
     $scope.conv.user._id = chat._id;
     $scope.conv.user.name = chat.name;
     $scope.conv.user.username = chat.username;

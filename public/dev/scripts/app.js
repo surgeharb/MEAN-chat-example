@@ -1,5 +1,5 @@
 var app = angular.module('chat', ['ngRoute', 'ngSanitize', 'ngStorage']);
-app.config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
+app.config(['$routeProvider', '$locationProvider', '$httpProvider', function ($routeProvider, $locationProvider, $httpProvider) {
   $locationProvider.html5Mode(true);
 
   $routeProvider
@@ -19,20 +19,21 @@ app.config(['$routeProvider', '$locationProvider', '$httpProvider', function($ro
 
 }])
 
-app.run(['$location', '$rootScope', '$http', '$localStorage', function($location, $rootScope, $http, $localStorage) {
+app.run(['$location', '$rootScope', '$http', '$localStorage', function ($location, $rootScope, $http, $localStorage) {
   // keep user logged in after page refresh
   if ($localStorage.User) {
     $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.User.token;
+    $rootScope.authToken = $localStorage.User.token;
   }
 
-  $rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
+  $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
     if (current.hasOwnProperty('$$route')) {
       $rootScope.title = current.$$route.title;
     }
   });
 
   // redirect to login page if not logged in and trying to access a restricted page
-  $rootScope.$on('$locationChangeStart', function(event, next, current) {
+  $rootScope.$on('$locationChangeStart', function (event, next, current) {
     var publicPages = ['/login', '/404'];
     var restrictedPage = publicPages.indexOf($location.path()) === -1;
     if (restrictedPage && !$localStorage.User) {
@@ -42,6 +43,6 @@ app.run(['$location', '$rootScope', '$http', '$localStorage', function($location
 
 }]);
 
-app.controller('MainCtrl', ['$scope', function($scope) {
+app.controller('MainCtrl', ['$scope', function ($scope) {
 
 }]);
