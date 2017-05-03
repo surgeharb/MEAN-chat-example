@@ -1,6 +1,7 @@
-app.controller('ChatController', ['$scope', '$rootScope', '$location', '$localStorage', 'apiService', 'userService', function ($scope, $rootScope, $location, $localStorage, apiService, userService) {
+app.controller('ChatController', ['$scope', '$location', '$localStorage', 'apiService', 'authService', 'userService', function ($scope, $location, $localStorage, apiService, authService, userService) {
 
-  var socket;
+  var socketScheme = "STS "; //socket's token scheme
+  var socket, authenticated = false;
   $scope.conversations = {};
 
   var cedric_pp = "https://scontent-mxp1-1.xx.fbcdn.net/v/t1.0-9/10981992_854381584636591_4594131235025284689_n.jpg?oh=0177b6d4c5e300a93cfa20de639bd235&oe=592BF9D9";
@@ -11,8 +12,12 @@ app.controller('ChatController', ['$scope', '$rootScope', '$location', '$localSt
     requestType: 'GET'
   }
   apiService.gatewayCall(params).then(function (response) {
-    if (!response.data.success) authService.Logout();
-    else {
+    if (!response.data.success) {
+      alert("An error has occured please login again!");
+      authService.Logout();
+      $location.path('/login');
+      $scope.apply();
+    } else {
       userService.updateUser(response.data.user);
       $scope.user = response.data.user;
 
@@ -56,27 +61,35 @@ app.controller('ChatController', ['$scope', '$rootScope', '$location', '$localSt
 
       //sockets
       socket = io.connect('http://localhost:12345');
-      // socket.on("connect", function () {
-      //   socket.emit("authenticate", { "token": $rootScope.authToken });
-      // })
+      socket.on("connect", function () {
+        socket.emit("authenticate", socketScheme + $localStorage.User.token, $scope.user.username);
+      })
 
-      // socket.on("auth", function () {
-      socket.emit("join", $scope.user.username);
-      socket.on("update", function (msg) {
-        console.log(msg);
-      });
+      socket.on("auth", function (verified) {
+        if (!verified) {
+          authService.Logout();
+          $location.path('/login');
+          alert("An error has occured please login again!");
+          $scope.$apply();
+        } else {
+          authenticated = true;
+          socket.emit("join", $scope.user.username);
+          socket.on("update", function (msg) {
+            console.log(msg);
+          });
 
-      socket.on("receive", function (data) {
-          if (data.sender == $scope.user.username) {
-            $scope.conversations[data.receiver].push(data);
-            $scope.$apply();
-          } else {
-            if (data.receiver != $scope.user.username) return false;
-            $scope.conversations[data.sender].push(data);
-            $scope.$apply();
-          }
-        })
-        // })
+          socket.on("receive", function (data) {
+            if (data.sender == $scope.user.username) {
+              $scope.conversations[data.receiver].push(data);
+              $scope.$apply();
+            } else {
+              if (data.receiver != $scope.user.username) return false;
+              $scope.conversations[data.sender].push(data);
+              $scope.$apply();
+            }
+          })
+        }
+      })
     }
   })
 
@@ -85,7 +98,7 @@ app.controller('ChatController', ['$scope', '$rootScope', '$location', '$localSt
 
   $scope.sendMessage = function () {
 
-    if ($scope.message) {
+    if ($scope.message && authenticated) {
       var date = new Date();
       var message = {
         "date": format(date.getDate()) + "/" + format(date.getMonth() + 1) + "/" + format(date.getFullYear()) + " " + format(date.getHours()) + ":" + format(date.getMinutes()) + ":" + format(date.getSeconds()),

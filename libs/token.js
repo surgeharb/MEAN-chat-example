@@ -9,7 +9,7 @@ const authHeader = require('auth-header');
  * @param {string} username - User's unique username
  * @returns {string} - JSON Web Token
  */
-module.exports.generate = function(id, username) {
+module.exports.generate = function (id, username) {
   return jwt.sign({ id: id.toString(), username: username }, process.env.APP_SECRET);
 }
 
@@ -20,21 +20,28 @@ module.exports.generate = function(id, username) {
  * @param {string} api - API type 
  * @returns {object} - Defining the response
  */
-module.exports.verify = function(authorization, api) {
+module.exports.verify = function (authorization, api) {
   var deferred = Q.defer();
+  var error = false;
 
-  var auth = authHeader.parse(authorization);
-  if (checkScheme(api) == '' || auth.scheme != checkScheme(api)) {
-    deferred.reject({ message: 'invalid authorization header' });
+  try {
+    var auth = authHeader.parse(authorization);
+  } catch (err) {
+    console.log("Invalid header was sent");
+    error = true;
   }
 
-  jwt.verify(auth.token, process.env.APP_SECRET, function(err, decoded) {
-    if (err) {
-      deferred.reject({ message: 'invalid authorization header' });
-    } else {
-      deferred.resolve({ message: 'verified' });
-    }
-  });
+  if (error || checkScheme(api) == '' || auth.scheme != checkScheme(api)) {
+    deferred.reject({ message: 'invalid authorization header' });
+  } else {
+    jwt.verify(auth.token, process.env.APP_SECRET, function (err, decoded) {
+      if (err) {
+        deferred.reject({ message: 'invalid authorization header' });
+      } else {
+        deferred.resolve({ message: 'verified' });
+      }
+    });
+  }
 
   return deferred.promise;
 }
@@ -46,7 +53,7 @@ module.exports.verify = function(authorization, api) {
  * @param {string} api - API type 
  * @returns {object} - Token or object containing a message
  */
-module.exports.decode = function(authorization, api) {
+module.exports.decode = function (authorization, api) {
   var auth = authHeader.parse(authorization);
   if (checkScheme(api) == '' || auth.scheme != checkScheme(api)) {
     return { message: 'invalid token' };
@@ -64,6 +71,8 @@ module.exports.decode = function(authorization, api) {
 function checkScheme(api) {
   if (api === 'chat') {
     return process.env.JWT_API_SCHEME;
+  } else if (api === 'socket') {
+    return process.env.JWT_SOCKET_SCHEME;
   } else {
     return '';
   }

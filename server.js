@@ -18,20 +18,7 @@ const mongoose = require('mongoose');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 
-/**
- * Connect to the database
- */
-require('./libs/dbconnection')(mongoose).then(function(log) {
-  console.log(log);
-
-  //populate status collections
-  //require('./libs/status')(config.get('statuses'));
-
-}, function(log) { //on error
-  console.log(log);
-});
-
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -44,7 +31,7 @@ app.use('/api', router);
 /**
  * Get app API routes
  */
-fs.readdirSync('./api').forEach(function(file) {
+fs.readdirSync('./api').forEach(function (file) {
   if (file.substr(-3) == '.js') {
     apiGroup = require('./api/' + file);
     apiGroup.routes(router, config);
@@ -54,7 +41,7 @@ fs.readdirSync('./api').forEach(function(file) {
 /**
  * Catch 404 and forward to error handler
  */
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 
   var err = new Error('Not Found');
   err.status = 404;
@@ -64,7 +51,7 @@ app.use(function(req, res, next) {
 /**
  * Error handler
  */
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   if (req.url.substr(0, 4) === '/api') {
     // set locals, only providing error in development
     res.locals.message = process.env.NODE_ENV === 'development' ? err.message : 'something bad happened :(';
@@ -81,12 +68,27 @@ app.use(function(err, req, res, next) {
 });
 
 app.use('/', express.static(__dirname + '/public'));
-app.get('/*', function(request, response, next) {
+app.get('/*', function (request, response, next) {
   response.sendFile('index.html', { root: __dirname + '/public' });
 })
 
-var server = app.listen(process.env.PORT, function() {
+var server = app.listen(process.env.PORT, function () {
   console.log(host);
-  var io = require('socket.io').listen(server);
-  var socket = require('./libs/sockets').init(io);
+
+  /**
+   * Connect to the database
+   */
+  require('./libs/dbconnection')(mongoose).then(function (log) {
+    console.log(log);
+
+    var io = require('socket.io').listen(server);
+    var socket = require('./libs/sockets').init(io);
+
+    //populate status collections
+    //require('./libs/status')(config.get('statuses'));
+
+  }, function (log) { //on error
+    console.log(log);
+  });
+
 })
